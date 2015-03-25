@@ -5,11 +5,15 @@ public class Enemy : MonoBehaviour {
 	public GameObject MyPoint;
 	public float Speed;
 	public GameObject Information;
-
+	public float myLife;
 
 	// Use this for initialization
 	void Start () {
 		Information = GameObject.Find("Info");
+		if (myLife <= 0) {
+			DestroyObject(this.gameObject);
+			DestroyObject(MyPoint.gameObject);
+		}
 	
 	}
 	
@@ -21,8 +25,12 @@ public class Enemy : MonoBehaviour {
 	{
 		if (other.gameObject.tag == "Bullet") {
 			Information.GetComponent<Info>().Score++;
-			DestroyObject(this.gameObject);
-			DestroyObject(MyPoint.gameObject);
+			myLife --;
+			DestroyObject(other.gameObject);
+		}
+		if (other.gameObject.tag == "Coconut") {
+			Information.GetComponent<Info>().Score++;
+			myLife -= 2;
 			DestroyObject(other.gameObject);
 		}
 		if (other.gameObject.tag == "Tap") {
