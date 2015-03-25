@@ -6,9 +6,12 @@ public class Info : MonoBehaviour {
 	public int Score;
 	public Text ScoreText;
 
+	public Text HighScoreText;
+	public int highScore;
+
 	public GameObject[] Life;
 	public int lifeCount;
-
+	
 	public GameObject gameOverPanel;
 
 	// Use this for initialization
@@ -37,8 +40,20 @@ public class Info : MonoBehaviour {
 		if (lifeCount < 0) {
 			Time.timeScale = 0;
 			gameOverPanel.SetActive(true);
+			applyHighScore();
 		}
+	}
 
+	void applyHighScore()
+	{
+		highScore = PlayerPrefs.GetInt("High Score");
+
+		if(highScore < Score)
+		{
+			PlayerPrefs.SetInt("High Score", Score);
+			highScore = PlayerPrefs.GetInt("High Score");
+		}
+		HighScoreText.text = highScore.ToString();
 	}
 
 	public void restart()
