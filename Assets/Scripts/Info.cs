@@ -11,14 +11,21 @@ public class Info : MonoBehaviour {
 
 	public GameObject[] Life;
 	public int lifeCount;
-	
+
+	public bool showAd;
+
 	public GameObject gameOverPanel;
 
 	// Use this for initialization
 	void Start () {
+	showAd = true;
+	HeyzapAds.start("652394e91a2dae688f5afff67ef9ec5e", HeyzapAds.FLAG_NO_OPTIONS);
 	gameOverPanel.SetActive(false);
+	
+
 	lifeCount = 3;
-		Time.timeScale = 1;
+
+
 	}
 	
 	// Update is called once per frame
@@ -41,9 +48,15 @@ public class Info : MonoBehaviour {
 			Time.timeScale = 0;
 			gameOverPanel.SetActive(true);
 			applyHighScore();
+
+			if(showAd)
+			{
+				HZInterstitialAd.show();
+				showAd= false;
+			}
 		}
 	}
-
+	
 	void applyHighScore()
 	{
 		highScore = PlayerPrefs.GetInt("High Score");
@@ -59,6 +72,12 @@ public class Info : MonoBehaviour {
 	public void restart()
 	{
 		Application.LoadLevel(Application.loadedLevel);
+	}
+
+
+	public void returnMenu()
+	{
+		Application.LoadLevel (0);
 	}
 
 

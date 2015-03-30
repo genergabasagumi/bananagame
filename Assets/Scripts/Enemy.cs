@@ -10,18 +10,20 @@ public class Enemy : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		Information = GameObject.Find("Info");
+	}
+	
+	// Update is called once per frame
+
+	void Update () {
+		this.transform.Translate(Vector2.up * Speed * Time.deltaTime);
 		if (myLife <= 0) {
 			DestroyObject(this.gameObject);
 			DestroyObject(MyPoint.gameObject);
 		}
-	
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		this.transform.Translate(Vector2.up * Speed * Time.deltaTime);
-	}
-	void OnCollisionEnter(Collision other)
+
+	//void OnCollisionEnter(Collision other)
+	void OnTriggerEnter(Collider other)
 	{
 		if (other.gameObject.tag == "Bullet") {
 			Information.GetComponent<Info>().Score++;

@@ -13,21 +13,18 @@ public class tapControls : MonoBehaviour {
 
 	public float minSwipeDistY;
 	public float minSwipeDistX;
-
-
 	public float Speed = 2.0F;
 	public float Value;
-	private float tempSpeed;
+
 	// Use this for initialization
 	void Start () {
-		Speed += tempSpeed;
+
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		Quaternion target = Quaternion.Euler(0, Value, 0);
 		point.transform.rotation = Quaternion.Slerp(point.transform.rotation, target, Speed * Time.deltaTime);
-
 		touchControl ();
 	}
 
@@ -50,7 +47,7 @@ public class tapControls : MonoBehaviour {
 			case TouchPhase.Ended:
 			{
 
-
+				/*
 				float swipeDistVertical = (new Vector3(0, touch.position.y, 0) - new Vector3(0, startPos.y, 0)).magnitude;
 
 				if (swipeDistVertical > minSwipeDistY) 
@@ -69,8 +66,8 @@ public class tapControls : MonoBehaviour {
 							Instantiate (bullet, attacker.transform.position - transform.up, attacker.transform.rotation);
 						break;
 					}
-
 				}
+				*/
 
 				float swipeDistHorizontal = (new Vector3(touch.position.x,0, 0) - new Vector3(startPos.x, 0, 0)).magnitude;
 				
@@ -80,20 +77,31 @@ public class tapControls : MonoBehaviour {
 					
 					if (swipeValue > 0)//right swipe
 					{
-						tempSpeed = 8;
 						//point.transform.Rotate (0, -120, 0);
-						Value += 120;
+						Value += 60;
 					}
 
 					else if (swipeValue < 0)//left swipe
 					{
-						tempSpeed = 8;
 						//point.transform.Rotate (0, 120, 0);
-						Value -= 120;
+						Value -= 60;
 					}
 					break;
 				}
-			
+
+				random = Random.Range (1, 15);
+				if (random >= 13)
+				{
+					Instantiate (critBullet, attacker.transform.position- transform.up, attacker.transform.rotation);
+					break;
+				}
+				
+				else
+					Instantiate (bullet, attacker.transform.position - transform.up, attacker.transform.rotation);
+				break;
+
+				
+				/*
 				if ((touch.position.x > Screen.width/2 ))
 				{
 					//changeDirection ("right");
@@ -116,6 +124,7 @@ public class tapControls : MonoBehaviour {
 					//point.transform.rotation =  Quaternion.Slerp(transform.rotation, target, Time.time * 0.1f);
 				}
 				break;
+				*/
 
 			}
 

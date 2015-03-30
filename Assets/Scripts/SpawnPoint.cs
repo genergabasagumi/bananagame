@@ -10,20 +10,46 @@ public class SpawnPoint : MonoBehaviour {
 	public int randomEnemy;
 	public GameObject currentSpawnEnemy;
 
+	public bool newWave;
+
+	public int waveCount;
+	public int checkWave;
+	public int amount;
+	public float waveWait;
+
 	public Transform OriginPoint;
+
+	public GameObject tapPanel;
 
 	public float SpawnWait;
 
+	public bool startGame;
+	public bool spawn;
+
 	// Use this for initialization
 	void Start () {
-		StartCoroutine (SpawnWave ());
+		newWave = true;
+		startGame = false;
+		tapPanel.SetActive (true);
+		spawn = false;
+		checkWave = 1;
+
 		//EnemyNumber = 3;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	
+	//	if (newWave) {
+			tapToStart ();
+		//	newWave = false;
+		//}
+	if (startGame && spawn) {
+			StartCoroutine (SpawnWave ());
+			spawn= false;
+		}
+
 	}
+
 	IEnumerator SpawnWave()
 	{
 		while (true) {
@@ -48,10 +74,48 @@ public class SpawnPoint : MonoBehaviour {
 				{
 					Instantiate (currentSpawnEnemy, SpawnPoint, SpawnRotate);
 				}
-
-			
 			//	Instantiate(Enemy,SpawnPoint,SpawnRotate);
 				yield return new WaitForSeconds(SpawnWait);
+			}
+
+			waveCount++;
+			checkWave++;
+			if(waveCount >= 5)
+			{
+				if(SpawnWait > 0.1f)
+					SpawnWait -= 0.07f;
+					waveCount = 0;
+
+				//tapPanel.SetActive (true);
+				//Time.timeScale(0);
+			}
+			yield return new WaitForSeconds (waveWait);
+		}
+	}
+
+	void tapToStart()
+	{
+		if (startGame == false) {
+			if (Input.touchCount > 0) {
+			
+				Touch touch = Input.touches [0];
+			
+				switch (touch.phase) {
+				
+				case TouchPhase.Began:
+				
+					break;
+				
+				case TouchPhase.Ended:
+					{
+						spawn = true;
+						Time.timeScale = 1;
+						startGame = true;
+						tapPanel.SetActive (false);
+						
+					}
+					break;
+				}
 			}
 		}
 	}
