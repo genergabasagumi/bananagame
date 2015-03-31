@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class SpawnPoint : MonoBehaviour {
 	public GameObject[] Enemy;
@@ -16,6 +17,9 @@ public class SpawnPoint : MonoBehaviour {
 	public int checkWave;
 	public int amount;
 	public float waveWait;
+	public int waveMax;
+
+	public GameObject[] enemyList;
 
 	public Transform OriginPoint;
 
@@ -25,16 +29,31 @@ public class SpawnPoint : MonoBehaviour {
 
 	public bool startGame;
 	public bool spawn;
+	public GameObject info;
+
+	public Text checkState;
+
+	public bool levelUp = false;
+	
+	public GameObject player;
+
+	void Awake()
+	{
+		startGame = false;
+		spawn = false;
+	}
 
 	// Use this for initialization
 	void Start () {
+		waveMax = 5 ;
 		newWave = true;
 		startGame = false;
 		tapPanel.SetActive (true);
-		spawn = false;
-		checkWave = 1;
 
+		checkWave = 1;
+		info = GameObject.Find("Info");
 		//EnemyNumber = 3;
+		player = GameObject.Find("Main Camera");
 	}
 	
 	// Update is called once per frame
@@ -43,11 +62,25 @@ public class SpawnPoint : MonoBehaviour {
 			tapToStart ();
 		//	newWave = false;
 		//}
-	if (startGame && spawn) {
-			StartCoroutine (SpawnWave ());
+
+		if (startGame && spawn) {
+			StartCoroutine ("SpawnWave");
 			spawn= false;
 		}
 
+		//checkState.text = enemyList.Length.ToString ();
+
+		checkState.text = checkWave.ToString ();
+
+		enemyList = GameObject.FindGameObjectsWithTag("Enemy");
+
+		if (enemyList.Length == 0 && levelUp) {
+			info.GetComponent<Info>().maxSide++;
+			waveMax *=2;
+			tapPanel.SetActive (true);
+			startGame = false;
+			levelUp = false;
+		}
 	}
 
 	IEnumerator SpawnWave()
@@ -61,7 +94,7 @@ public class SpawnPoint : MonoBehaviour {
 				Vector3 SpawnPoint = new Vector3(OriginPoint.position.x, 0.0f,0.0f);
 				float RotateDegree;
 				RotateDegree = Random.Range (1, 7);
-				RotateDegree *= 60;
+				RotateDegree *= info.GetComponent<Info>().sideChange();
 				Quaternion SpawnRotate = Quaternion.Euler (0, RotateDegree, 0);
 				//this.transform.rotation = Rotate;
 
@@ -70,24 +103,31 @@ public class SpawnPoint : MonoBehaviour {
 					if(randomEnemy == x)
 						currentSpawnEnemy = Enemy[x];
 				}
+
 				if(currentSpawnEnemy !=null)
 				{
 					Instantiate (currentSpawnEnemy, SpawnPoint, SpawnRotate);
 				}
+
 			//	Instantiate(Enemy,SpawnPoint,SpawnRotate);
 				yield return new WaitForSeconds(SpawnWait);
 			}
 
 			waveCount++;
 			checkWave++;
-			if(waveCount >= 5)
+			if(waveCount >= 4)
 			{
 				if(SpawnWait > 0.1f)
 					SpawnWait -= 0.07f;
 					waveCount = 0;
-
 				//tapPanel.SetActive (true);
 				//Time.timeScale(0);
+			}
+
+			if(checkWave >= waveMax)
+			{
+				levelUp = true;
+				StopCoroutine("SpawnWave");
 			}
 			yield return new WaitForSeconds (waveWait);
 		}
@@ -108,11 +148,12 @@ public class SpawnPoint : MonoBehaviour {
 				
 				case TouchPhase.Ended:
 					{
+					//player.transform.rotation= Quaternion.Euler(0,0,0);
+						player.GetComponent<tapControls>().Value = 0;
 						spawn = true;
-						Time.timeScale = 1;
+						//Time.timeScale = 1;
 						startGame = true;
 						tapPanel.SetActive (false);
-						
 					}
 					break;
 				}

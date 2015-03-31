@@ -17,9 +17,9 @@ public class Enemy : MonoBehaviour {
 	// Update is called once per frame
 
 	void Update () {
-		GetComponent<NavMeshAgent> ().destination = playerT.position;
+//		GetComponent<NavMeshAgent> ().destination = playerT.position;
 
-		//this.transform.Translate(Vector2.up * Speed * Time.deltaTime);
+		this.transform.Translate(Vector2.up * Speed * Time.deltaTime);
 		if (myLife <= 0) {
 			DestroyObject(this.gameObject);
 			DestroyObject(MyPoint.gameObject);

@@ -15,21 +15,38 @@ public class Info : MonoBehaviour {
 	public bool showAd;
 
 	public GameObject gameOverPanel;
+	public int sideValue;
+	public int maxSide =2;
+
+	public Text sideText;
+
 
 	// Use this for initialization
 	void Start () {
 	showAd = true;
 	HeyzapAds.start("652394e91a2dae688f5afff67ef9ec5e", HeyzapAds.FLAG_NO_OPTIONS);
 	gameOverPanel.SetActive(false);
-	
+	Time.timeScale = 1;
 
 	lifeCount = 3;
 
+	}
 
+	public int sideChange()
+	{
+		if(maxSide > 6 )
+		{
+			maxSide = 5;
+		}
+		sideValue = 360 / maxSide;
+		return sideValue;
 	}
 	
 	// Update is called once per frame
 	void Update () {	
+
+		//sideText.text = sideValue.ToString ();
+		sideText.text = maxSide.ToString ();
 
 		ScoreText.text = Score.ToString ();
 

@@ -14,11 +14,13 @@ public class tapControls : MonoBehaviour {
 	public float minSwipeDistY;
 	public float minSwipeDistX;
 	public float Speed = 2.0F;
-	public float Value;
+	public float Value = 0;
+
+	public GameObject info;
 
 	// Use this for initialization
 	void Start () {
-
+		info = GameObject.Find("Info");
 	}
 	
 	// Update is called once per frame
@@ -78,13 +80,15 @@ public class tapControls : MonoBehaviour {
 					if (swipeValue > 0)//right swipe
 					{
 						//point.transform.Rotate (0, -120, 0);
-						Value += 60;
+						//Value += 60;
+						Value += info.GetComponent<Info>().sideChange();
 					}
 
 					else if (swipeValue < 0)//left swipe
 					{
 						//point.transform.Rotate (0, 120, 0);
-						Value -= 60;
+						//Value -= 60;
+						Value -= info.GetComponent<Info>().sideChange();
 					}
 					break;
 				}
