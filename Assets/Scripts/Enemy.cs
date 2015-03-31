@@ -7,6 +7,8 @@ public class Enemy : MonoBehaviour {
 	public GameObject Information;
 	public float myLife;
 
+	public Transform playerT;
+
 	// Use this for initialization
 	void Start () {
 		Information = GameObject.Find("Info");
@@ -15,7 +17,9 @@ public class Enemy : MonoBehaviour {
 	// Update is called once per frame
 
 	void Update () {
-		this.transform.Translate(Vector2.up * Speed * Time.deltaTime);
+		GetComponent<NavMeshAgent> ().destination = playerT.position;
+
+		//this.transform.Translate(Vector2.up * Speed * Time.deltaTime);
 		if (myLife <= 0) {
 			DestroyObject(this.gameObject);
 			DestroyObject(MyPoint.gameObject);
