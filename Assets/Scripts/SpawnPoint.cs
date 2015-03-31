@@ -37,6 +37,7 @@ public class SpawnPoint : MonoBehaviour {
 	
 	public GameObject player;
 
+	public bool CheckFinish;
 	void Awake()
 	{
 		startGame = false;
@@ -73,6 +74,11 @@ public class SpawnPoint : MonoBehaviour {
 		checkState.text = checkWave.ToString ();
 
 		enemyList = GameObject.FindGameObjectsWithTag("Enemy");
+
+		if (enemyList.Length == 0 && CheckFinish) {
+			StartCoroutine("Delay");
+			CheckFinish = false;
+		}
 
 		if (enemyList.Length == 0 && levelUp) {
 			info.GetComponent<Info>().maxSide++;
@@ -126,11 +132,16 @@ public class SpawnPoint : MonoBehaviour {
 
 			if(checkWave >= waveMax)
 			{
-				levelUp = true;
+				CheckFinish = true;
 				StopCoroutine("SpawnWave");
 			}
 			yield return new WaitForSeconds (waveWait);
 		}
+	}
+	IEnumerator Delay()
+	{
+		yield return new WaitForSeconds (5.0f);
+		levelUp = true;
 	}
 
 	void tapToStart()
@@ -149,6 +160,7 @@ public class SpawnPoint : MonoBehaviour {
 				case TouchPhase.Ended:
 					{
 					//player.transform.rotation= Quaternion.Euler(0,0,0);
+						
 						player.GetComponent<tapControls>().Value = 0;
 						spawn = true;
 						//Time.timeScale = 1;
